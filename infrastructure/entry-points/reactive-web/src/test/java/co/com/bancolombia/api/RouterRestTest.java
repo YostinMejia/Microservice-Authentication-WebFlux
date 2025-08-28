@@ -5,6 +5,8 @@ import co.com.bancolombia.api.dto.ResponseUserDto;
 import co.com.bancolombia.api.helper.RequestValidator;
 import co.com.bancolombia.api.mapper.UserDtoMapper;
 import co.com.bancolombia.model.user.User;
+import co.com.bancolombia.model.user.exceptions.MultipleErrorsResponseDto;
+import co.com.bancolombia.model.user.exceptions.SingleErrorResponseDto;
 import co.com.bancolombia.usecase.user.UserUseCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,11 +20,12 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
-@ContextConfiguration(classes = { UserHandler.class, RouterRest.class, UserPath.class})
+@ContextConfiguration(classes = {UserHandler.class, RouterRest.class, UserPath.class})
 @TestPropertySource(properties = {
         "routes.paths.users.users=/api/v1/usuarios",
         "routes.paths.users.findByEmail=/api/v1/usuarios/{email}"
@@ -36,9 +39,9 @@ public class RouterRestTest {
     void setUp(ApplicationContext context) {
         client = WebTestClient.bindToApplicationContext(context).build();
     }
+
     @MockitoBean
     private UserHandler userHandler;
-
 
     @MockitoBean
     private UserUseCase userUseCase;
@@ -50,21 +53,57 @@ public class RouterRestTest {
     private RequestValidator requestValidator;
 
     @Test
-    void listenGETUseCase_whenNoUserIsRegistered_thenShouldReturnEmptyBody() {
-        given(userHandler.listenGetAll(any())).willReturn(ServerResponse.ok().build());
+    void listenSaveUseCase_whenOccursInternalError_thenShouldReturnSingleErrorDto() {
 
-        client.get()
+        SingleErrorResponseDto responseBody = new SingleErrorResponseDto("Internal Server Error", "I500-00");
+        given(userHandler.listenSave(any())).willReturn(ServerResponse.status(500).contentType(MediaType.APPLICATION_JSON).bodyValue(responseBody));
+
+        client.post()
                 .uri("/api/v1/usuarios")
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
-                .expectStatus().isOk()
-                .expectBody(Void.class);
+                .expectStatus().is5xxServerError()
+                .expectBody(SingleErrorResponseDto.class)
+                .isEqualTo(responseBody);
     }
 
     @Test
-    void listenGETUseCase_whenNoUserIsRegistered_thenShouldReturnResponseDto() {
+    void listenSaveUseCase_whenTheCreateUserDtoFailed_thenShouldReturnMultipleErrorDto() {
 
-        User user1 = User.builder()
+        MultipleErrorsResponseDto responseBody = new MultipleErrorsResponseDto(
+                List.of("document: no debe estar vacío",
+                "baseSalary: no debe ser nulo",
+                "document: no debe ser nulo"), "Create user validation failed", "B400-00");
+        given(userHandler.listenSave(any())).willReturn(ServerResponse.badRequest().contentType(MediaType.APPLICATION_JSON).bodyValue(responseBody));
+
+        client.post()
+                .uri("/api/v1/usuarios")
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isBadRequest()
+                .expectBody(MultipleErrorsResponseDto.class)
+                .isEqualTo(responseBody);
+    }
+
+    @Test
+    void listenSaveUseCase_whenTheUserIsRegistered_thenShouldReturnErrorDto() {
+
+        SingleErrorResponseDto responseBody = new SingleErrorResponseDto("User registered already", "B400-00");
+        given(userHandler.listenSave(any())).willReturn(ServerResponse.badRequest().contentType(MediaType.APPLICATION_JSON).bodyValue(responseBody));
+
+        client.post()
+                .uri("/api/v1/usuarios")
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isBadRequest()
+                .expectBody(SingleErrorResponseDto.class)
+                .isEqualTo(responseBody);
+    }
+
+    @Test
+    void listenSaveUseCase_whenTheUserDoesNotExist_thenShouldReturnResponseDto() {
+
+        User user = User.builder()
                 .name("Alice")
                 .lastName("Smith")
                 .birthDate(LocalDate.of(1995, 5, 20))
@@ -72,15 +111,18 @@ public class RouterRestTest {
                 .phone("3001234567")
                 .email("alice@mail.com")
                 .baseSalary("2000")
+                .document("984123412")
                 .build();
-        ResponseUserDto responseBody =  new ResponseUserDto("User created successfully", "201", user1);
-        given(userHandler.listenGetAll(any())).willReturn(ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).bodyValue(responseBody));
+        ResponseUserDto responseBody = new ResponseUserDto("User created successfully", "201-00", user);
+        given(userHandler.listenSave(any())).willReturn(ServerResponse.status(201).contentType(MediaType.APPLICATION_JSON).bodyValue(responseBody));
 
-        client.get()
+        client.post()
                 .uri("/api/v1/usuarios")
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
-                .expectStatus().isOk()
-                .expectBody(Void.class);
+                .expectStatus().isCreated()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                .expectBody(ResponseUserDto.class)
+                .isEqualTo(responseBody);
     }
 }

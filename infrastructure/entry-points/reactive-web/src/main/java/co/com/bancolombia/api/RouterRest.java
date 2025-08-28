@@ -3,7 +3,7 @@ package co.com.bancolombia.api;
 import co.com.bancolombia.api.config.UserPath;
 import co.com.bancolombia.api.dto.CreateUserDto;
 import co.com.bancolombia.api.dto.ResponseUserDto;
-import co.com.bancolombia.model.user.exceptions.ManyErrorsResponseDto;
+import co.com.bancolombia.model.user.exceptions.MultipleErrorsResponseDto;
 import co.com.bancolombia.model.user.exceptions.SingleErrorResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -39,7 +39,7 @@ public class RouterRest {
                             operation = @Operation(operationId = "save", summary = "Save User", tags = {"Users"},
                                     responses = {
                                             @ApiResponse(responseCode = "201", description = "Successful save", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseUserDto.class)))
-                                            , @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ManyErrorsResponseDto.class)))
+                                            , @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(mediaType = "application/json", schema = @Schema(implementation = MultipleErrorsResponseDto.class)))
                                             , @ApiResponse(responseCode = "409", description = "Email registered already", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SingleErrorResponseDto.class)))
                                             , @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SingleErrorResponseDto.class)))
                                     },

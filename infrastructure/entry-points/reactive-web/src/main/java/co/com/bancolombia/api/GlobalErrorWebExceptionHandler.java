@@ -1,7 +1,7 @@
 package co.com.bancolombia.api;
 
 import co.com.bancolombia.model.user.exceptions.BusinessException;
-import co.com.bancolombia.model.user.exceptions.ManyErrorsResponseDto;
+import co.com.bancolombia.model.user.exceptions.MultipleErrorsResponseDto;
 import co.com.bancolombia.model.user.exceptions.SingleErrorResponseDto;
 import org.springframework.boot.autoconfigure.web.WebProperties;
 import org.springframework.boot.autoconfigure.web.reactive.error.AbstractErrorWebExceptionHandler;
@@ -47,7 +47,7 @@ public class GlobalErrorWebExceptionHandler extends AbstractErrorWebExceptionHan
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .bodyValue(
                                         bex.getErrors() != null ?
-                                                new ManyErrorsResponseDto(bex.getErrors(), bex.getMessage(), bex.getCode())
+                                                new MultipleErrorsResponseDto(bex.getErrors(), bex.getMessage(), bex.getCode())
                                                 : new SingleErrorResponseDto(bex.getMessage(), bex.getCode()));
                     }
                     return Mono.error(error);

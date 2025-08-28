@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -22,4 +23,15 @@ public class User {
     private String phone;
     private String email;
     private String baseSalary;
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof User user)) return false;
+        return  Objects.equals(document, user.document) && Objects.equals(email, user.email);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(document, email);
+    }
 }

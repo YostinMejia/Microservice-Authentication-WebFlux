@@ -26,7 +26,7 @@ public class UserUseCase {
         return userRepository.existsByEmailOrDocument(user.getEmail(), user.getDocument())
                 .filter(isRegistered -> isRegistered)
                 .flatMap(isRegistered -> Mono.<User>error(new BusinessException(null, "User registered already", "B400-00")))
-                .switchIfEmpty(userRepository.save(user));
+                .switchIfEmpty(Mono.defer(() -> userRepository.save(user)));
     }
 
 
