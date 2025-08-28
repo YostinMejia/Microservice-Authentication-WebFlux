@@ -2,13 +2,16 @@ package co.com.bancolombia.model.user.exceptions;
 
 import lombok.Getter;
 
+import java.util.List;
+
 @Getter
 public class BusinessException extends RuntimeException {
-    private final ErrorResponseDto errorResponse;
+    private final String code;
+    private final List<String> errors;
 
-    public BusinessException(ErrorResponseDto errorResponse) {
-        super(errorResponse.message());
-        this.errorResponse = errorResponse;
+    public BusinessException(List<String> errors, String message, String code) {
+        super(message);
+        this.code = code;
+        this.errors = errors;
     }
-
 }

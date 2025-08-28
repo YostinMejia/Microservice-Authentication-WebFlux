@@ -1,9 +1,10 @@
 package co.com.bancolombia.api;
 
 import co.com.bancolombia.api.config.UserPath;
+import co.com.bancolombia.api.dto.CreateUserDto;
 import co.com.bancolombia.api.dto.ResponseUserDto;
-import co.com.bancolombia.model.user.User;
-import co.com.bancolombia.model.user.exceptions.ErrorResponseDto;
+import co.com.bancolombia.model.user.exceptions.ManyErrorsResponseDto;
+import co.com.bancolombia.model.user.exceptions.SingleErrorResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -34,20 +35,22 @@ public class RouterRest {
     @RouterOperations(
 
             value = {
-                    @RouterOperation(method = POST, path = "/api/v1/users",
+                    @RouterOperation(method = POST, path = "/api/v1/usuarios",
                             operation = @Operation(operationId = "save", summary = "Save User", tags = {"Users"},
                                     responses = {
-                                            @ApiResponse(responseCode = "201", description = "Successful save", content = @Content(mediaType = "application/json", schema = @Schema(implementation = User.class)))
-                                            , @ApiResponse(responseCode = "409", description = "Email registered already", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponseDto.class)))
+                                            @ApiResponse(responseCode = "201", description = "Successful save", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseUserDto.class)))
+                                            , @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ManyErrorsResponseDto.class)))
+                                            , @ApiResponse(responseCode = "409", description = "Email registered already", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SingleErrorResponseDto.class)))
+                                            , @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SingleErrorResponseDto.class)))
                                     },
                                     requestBody = @RequestBody(
                                             required = true,
-                                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseUserDto.class))
+                                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = CreateUserDto.class))
                                     )
 
 
                             )),
-                    @RouterOperation(method = GET, path = "/api/v1/users",
+                    @RouterOperation(method = GET, path = "/api/v1/usuarios",
                             operation = @Operation(operationId = "findAll", tags = "Users", summary = "Get all Users",
                                     responses = {
                                             @ApiResponse(responseCode = "200", description = "Successful retrieve", content = @Content(mediaType = "text/event-stream", schema = @Schema(implementation = ResponseUserDto.class)))

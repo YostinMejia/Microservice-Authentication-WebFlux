@@ -25,6 +25,7 @@ public class UserEntity {
     private String email;
     private Integer baseSalary;
 
+    private String document;
     private String phone;
     private LocalDate birthDate;
     private String address;

@@ -23,16 +23,17 @@ public class UserHandler {
     private final RequestValidator requestValidator;
 
     public Mono<ServerResponse> listenSave(ServerRequest serverRequest) {
-        log.info("Save user called");
-        return serverRequest.bodyToMono(CreateUserDto.class)
-                .flatMap(requestValidator::validator)
-                .flatMap(createUserDto -> (userUseCase.save(userDtoMapper.toUser(createUserDto))
-                        .flatMap(user -> {
 
-                            return ServerResponse.status(201)
-                                    .contentType(MediaType.APPLICATION_JSON)
-                                    .bodyValue(new ResponseUserDto("User created successfuly", "201", user));
-                        }))).log();
+        return serverRequest.bodyToMono(CreateUserDto.class)
+                .doOnNext(l->log.info("Save user called"))
+                .flatMap(requestValidator::validator).
+                map(userDtoMapper::toUser)
+                .flatMap(user -> (userUseCase.save(user))
+                        .flatMap(userSaved ->
+                                ServerResponse.status(201)
+                                        .contentType(MediaType.APPLICATION_JSON)
+                                        .bodyValue(new ResponseUserDto("User created successfully", "201-00", userSaved))
+                        ));
 
     }
 

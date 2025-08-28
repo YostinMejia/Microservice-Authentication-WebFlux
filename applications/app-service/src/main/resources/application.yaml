@@ -26,8 +26,8 @@ cors:
 routes:
   paths:
     users:
-      users:  "/api/v1/users"
-      findByEmail: "/api/v1/users/{email}"
+      users:  "/api/v1/usuarios"
+      findByEmail: "/api/v1/usuarios/{email}"
 adapters:
   r2dbc:
     host: "localhost"

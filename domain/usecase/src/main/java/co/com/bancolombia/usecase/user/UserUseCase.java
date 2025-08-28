@@ -2,13 +2,11 @@ package co.com.bancolombia.usecase.user;
 
 import co.com.bancolombia.model.user.User;
 import co.com.bancolombia.model.user.exceptions.BusinessException;
-import co.com.bancolombia.model.user.exceptions.ErrorResponseDto;
 import co.com.bancolombia.model.user.gateways.UserRepository;
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.List;
 
 @RequiredArgsConstructor
 public class UserUseCase {
@@ -24,8 +22,10 @@ public class UserUseCase {
     }
 
     public Mono<User> save(User user) {
-        return userRepository.findByEmail(user.getEmail())
-                .flatMap(userFound -> Mono.<User>error(new BusinessException(new ErrorResponseDto(List.of("User registered already"), "User registered already", "B400-00"))))
+
+        return userRepository.existsByEmailOrDocument(user.getEmail(), user.getDocument())
+                .filter(isRegistered -> isRegistered)
+                .flatMap(isRegistered -> Mono.<User>error(new BusinessException(null, "User registered already", "B400-00")))
                 .switchIfEmpty(userRepository.save(user));
     }
 
