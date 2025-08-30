@@ -41,8 +41,9 @@ public class UserHandler {
         log.info("Get by Email called");
         String document = serverRequest.pathVariable("document");
         return userUseCase.existsByDocument(document)
+                .filter(Boolean::booleanValue)
                 .flatMap(exist -> ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).bodyValue(new ResponseUserDto<Boolean>("User exists","200-00",exist) ))
-                .switchIfEmpty(ServerResponse.notFound().build());
+                .switchIfEmpty(ServerResponse.status(404).bodyValue(new ResponseUserDto<Boolean>("User Does not exists","404-00",false) ));
     }
 
     public Mono<ServerResponse> listenGetAll(ServerRequest serverRequest) {
