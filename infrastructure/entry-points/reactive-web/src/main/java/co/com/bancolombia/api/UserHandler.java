@@ -25,24 +25,24 @@ public class UserHandler {
     public Mono<ServerResponse> listenSave(ServerRequest serverRequest) {
 
         return serverRequest.bodyToMono(CreateUserDto.class)
-                .doOnNext(l->log.info("Save user called"))
+                .doOnNext(l -> log.info("Save user called"))
                 .flatMap(requestValidator::validator).
                 map(userDtoMapper::toUser)
                 .flatMap(user -> (userUseCase.save(user))
                         .flatMap(userSaved ->
                                 ServerResponse.status(201)
                                         .contentType(MediaType.APPLICATION_JSON)
-                                        .bodyValue(new ResponseUserDto("User created successfully", "201-00", userSaved))
+                                        .bodyValue(new ResponseUserDto<User>("User created successfully", "201-00", userSaved))
                         ));
 
     }
 
-    public Mono<ServerResponse> listenGetByEmail(ServerRequest serverRequest) {
+    public Mono<ServerResponse> listenGetByDocument(ServerRequest serverRequest) {
         log.info("Get by Email called");
-        String email = serverRequest.pathVariable("email");
-        return userUseCase.findUserByEmail(email)
-                .flatMap(user -> ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).bodyValue(user))
-                .switchIfEmpty(ServerResponse.notFound().build()).log();
+        String document = serverRequest.pathVariable("document");
+        return userUseCase.existsByDocument(document)
+                .flatMap(exist -> ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).bodyValue(new ResponseUserDto<Boolean>("User exists","200-00",exist) ))
+                .switchIfEmpty(ServerResponse.notFound().build());
     }
 
     public Mono<ServerResponse> listenGetAll(ServerRequest serverRequest) {

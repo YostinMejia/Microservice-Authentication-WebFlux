@@ -28,6 +28,7 @@ routes:
     users:
       users:  "/api/v1/usuarios"
       findByEmail: "/api/v1/usuarios/{email}"
+      existsByDocument: "/api/v1/usuarios/{document}"
 adapters:
   r2dbc:
     host: "localhost"

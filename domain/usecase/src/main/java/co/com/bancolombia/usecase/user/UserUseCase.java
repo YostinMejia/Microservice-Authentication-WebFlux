@@ -17,6 +17,10 @@ public class UserUseCase {
         return userRepository.findByEmail(email);
     }
 
+    public Mono<Boolean> existsByDocument(String document) {
+        return userRepository.existsByDocument(document);
+    }
+
     public Flux<User> findAll() {
         return userRepository.findAll();
     }
@@ -24,10 +28,9 @@ public class UserUseCase {
     public Mono<User> save(User user) {
 
         return userRepository.existsByEmailOrDocument(user.getEmail(), user.getDocument())
-                .filter(isRegistered -> isRegistered)
+                .filter(Boolean::booleanValue)
                 .flatMap(isRegistered -> Mono.<User>error(new BusinessException(null, "User registered already", "B400-00")))
                 .switchIfEmpty(Mono.defer(() -> userRepository.save(user)));
     }
-
 
 }

@@ -2,8 +2,8 @@ package co.com.bancolombia.api.dto;
 
 import co.com.bancolombia.model.user.User;
 
-public record ResponseUserDto(
+public record ResponseUserDto<T>(
         String message,
         String code,
-        User data
+        T data
 ) {}

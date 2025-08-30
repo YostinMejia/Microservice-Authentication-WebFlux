@@ -64,7 +64,7 @@ public class RouterRest {
     @Bean
     public RouterFunction<ServerResponse> routerFunction(UserHandler userHandler) {
         return route(POST(userPath.getUsers()), userHandler::listenSave)
-                .andRoute(GET(userPath.getFindByEmail()), userHandler::listenGetByEmail)
+                .andRoute(GET(userPath.getExistsByDocument()), userHandler::listenGetByDocument)
                 .and(route(GET(userPath.getUsers()), userHandler::listenGetAll));
     }
 }
