@@ -1,7 +1,8 @@
 package co.com.bancolombia.api;
 
 import co.com.bancolombia.api.helper.RequestValidator;
-import co.com.bancolombia.api.mapper.UserDtoMapper;
+import co.com.bancolombia.api.user.mapper.UserDtoMapper;
+import co.com.bancolombia.api.user.UserHandler;
 import co.com.bancolombia.usecase.user.UserUseCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.Objects;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -23,6 +24,7 @@ public class User {
     private String phone;
     private String email;
     private String baseSalary;
+    private UUID idRol;
 
     @Override
     public boolean equals(Object o) {

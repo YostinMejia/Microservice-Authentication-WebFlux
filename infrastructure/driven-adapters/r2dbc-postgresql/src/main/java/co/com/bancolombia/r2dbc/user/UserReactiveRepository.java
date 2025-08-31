@@ -1,7 +1,7 @@
-package co.com.bancolombia.r2dbc;
+package co.com.bancolombia.r2dbc.user;
 
 import co.com.bancolombia.model.user.User;
-import co.com.bancolombia.r2dbc.entity.UserEntity;
+import co.com.bancolombia.r2dbc.user.entity.UserEntity;
 import org.springframework.data.repository.query.ReactiveQueryByExampleExecutor;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import reactor.core.publisher.Mono;

@@ -1,12 +1,13 @@
 package co.com.bancolombia.api;
 
-import co.com.bancolombia.api.config.UserPath;
+import co.com.bancolombia.api.user.config.UserPath;
 import co.com.bancolombia.api.dto.ResponseUserDto;
 import co.com.bancolombia.api.helper.RequestValidator;
-import co.com.bancolombia.api.mapper.UserDtoMapper;
+import co.com.bancolombia.api.user.mapper.UserDtoMapper;
+import co.com.bancolombia.api.user.UserHandler;
 import co.com.bancolombia.model.user.User;
-import co.com.bancolombia.model.user.exceptions.MultipleErrorsResponseDto;
-import co.com.bancolombia.model.user.exceptions.SingleErrorResponseDto;
+import co.com.bancolombia.model.exceptions.MultipleErrorsResponseDto;
+import co.com.bancolombia.model.exceptions.SingleErrorResponseDto;
 import co.com.bancolombia.usecase.user.UserUseCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -32,3 +32,5 @@ include ':validator'
 project(':validator').projectDir = file('./infrastructure/helpers/validator')
 include ':exceptions'
 project(':exceptions').projectDir = file('./infrastructure/helpers/exceptions')
+include ':prueba-helper'
+project(':prueba-helper').projectDir = file('./infrastructure/helpers/prueba-helper')

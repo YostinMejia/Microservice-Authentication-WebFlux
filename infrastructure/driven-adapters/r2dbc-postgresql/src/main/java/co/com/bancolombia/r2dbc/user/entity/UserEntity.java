@@ -1,4 +1,4 @@
-package co.com.bancolombia.r2dbc.entity;
+package co.com.bancolombia.r2dbc.user.entity;
 
 
 import lombok.*;
@@ -7,6 +7,7 @@ import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 
 @AllArgsConstructor
@@ -29,5 +30,6 @@ public class UserEntity {
     private String phone;
     private LocalDate birthDate;
     private String address;
+    private UUID idRol;
 
 }

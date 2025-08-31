@@ -1,7 +1,7 @@
 package co.com.bancolombia.usecase.user;
 
 import co.com.bancolombia.model.user.User;
-import co.com.bancolombia.model.user.exceptions.BusinessException;
+import co.com.bancolombia.model.exceptions.BusinessException;
 import co.com.bancolombia.model.user.gateways.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -1,4 +1,4 @@
-package co.com.bancolombia.api.dto;
+package co.com.bancolombia.api.user.dto;
 
 import jakarta.validation.constraints.*;
 
@@ -13,6 +13,8 @@ public record CreateUserDto(
         @NotNull
         @Email
         String email,
+        @NotBlank
+        String rol,
         @NotNull
         @Min(value = 0, message = "The minimum value is 0")
         @Max(value = 15000000, message = "The maximum value is 15000000")
@@ -21,11 +23,12 @@ public record CreateUserDto(
                 , message = "Birth Date should have the format yyyy-MM-dd and be a valid date")
         String birthDate,
         @Pattern(regexp = "^\\+\\d{2,3} \\d{10,18}$"
-                ,message = "The phone should have the format +xx xxxxxxxxxx and be a valid phone number")
+                , message = "The phone should have the format +xx xxxxxxxxxx and be a valid phone number")
         String phone,
         @NotNull
         @NotBlank
         String document,
         String address
 
-) {}
+) {
+}

@@ -1,4 +1,4 @@
-package co.com.bancolombia.model.user.exceptions;
+package co.com.bancolombia.model.exceptions;
 
 import lombok.Getter;
 

@@ -1,7 +1,6 @@
 package co.com.bancolombia.api.helper;
 
-import co.com.bancolombia.api.dto.CreateUserDto;
-import co.com.bancolombia.model.user.exceptions.BusinessException;
+import co.com.bancolombia.model.exceptions.BusinessException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
@@ -13,16 +12,16 @@ import java.util.Set;
 
 @Component
 @RequiredArgsConstructor
-public class RequestValidator {
+public class RequestValidator<T> {
 
     private final Validator validator;
 
-    public Mono<CreateUserDto> validator(CreateUserDto createUserDto) {
+    public Mono<T> validator(T dto) {
 
         return Mono.defer(() -> {
-            final Set<ConstraintViolation<CreateUserDto>> errors = validator.validate(createUserDto);
+            final Set<ConstraintViolation<T>> errors = validator.validate(dto);
             if (errors.isEmpty()) {
-                return Mono.just(createUserDto);
+                return Mono.just(dto);
             }
 
             final List<String> listErrors = errors.stream().map(er -> String.format("%s: %s", er.getPropertyPath(), er.getMessage())).toList();

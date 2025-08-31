@@ -1,10 +1,11 @@
 package co.com.bancolombia.api;
 
-import co.com.bancolombia.api.config.UserPath;
-import co.com.bancolombia.api.dto.CreateUserDto;
+import co.com.bancolombia.api.user.config.UserPath;
+import co.com.bancolombia.api.user.dto.CreateUserDto;
 import co.com.bancolombia.api.dto.ResponseUserDto;
-import co.com.bancolombia.model.user.exceptions.MultipleErrorsResponseDto;
-import co.com.bancolombia.model.user.exceptions.SingleErrorResponseDto;
+import co.com.bancolombia.api.user.UserHandler;
+import co.com.bancolombia.model.exceptions.MultipleErrorsResponseDto;
+import co.com.bancolombia.model.exceptions.SingleErrorResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;

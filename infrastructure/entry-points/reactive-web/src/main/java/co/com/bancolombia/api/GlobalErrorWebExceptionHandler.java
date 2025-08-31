@@ -1,8 +1,8 @@
 package co.com.bancolombia.api;
 
-import co.com.bancolombia.model.user.exceptions.BusinessException;
-import co.com.bancolombia.model.user.exceptions.MultipleErrorsResponseDto;
-import co.com.bancolombia.model.user.exceptions.SingleErrorResponseDto;
+import co.com.bancolombia.model.exceptions.BusinessException;
+import co.com.bancolombia.model.exceptions.MultipleErrorsResponseDto;
+import co.com.bancolombia.model.exceptions.SingleErrorResponseDto;
 import org.springframework.boot.autoconfigure.web.WebProperties;
 import org.springframework.boot.autoconfigure.web.reactive.error.AbstractErrorWebExceptionHandler;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
