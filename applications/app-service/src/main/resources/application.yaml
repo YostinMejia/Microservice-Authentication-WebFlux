@@ -28,7 +28,10 @@ routes:
     users:
       users:  "/api/v1/usuarios"
       findByEmail: "/api/v1/usuarios/{email}"
-      existsByDocument: "/api/v1/usuarios/{document}"
+      existsByDocumentAndEmail: "/api/v1/usuarios/exists"
+    auth:
+      login: "/api/v1/login"
+      isSameEmailAsToken: "/api/v1/auth/same-email"
 adapters:
   r2dbc:
     host: "localhost"
@@ -37,3 +40,6 @@ adapters:
     schema: "public"
     username: "postgres"
     password: "1234"
+jwt:
+  secret: uFI2TjnGi3wC9pzQ3urYEyreDGDiYtYoBNelOQRclVzcmJTRDPOSUyY3HrLQGhw5
+  expirationMinutes: 400

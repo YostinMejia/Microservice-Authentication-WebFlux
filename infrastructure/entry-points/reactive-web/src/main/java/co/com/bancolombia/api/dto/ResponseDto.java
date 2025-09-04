@@ -1,8 +1,6 @@
 package co.com.bancolombia.api.dto;
 
-import co.com.bancolombia.model.user.User;
-
-public record ResponseUserDto<T>(
+public record ResponseDto<T>(
         String message,
         String code,
         T data

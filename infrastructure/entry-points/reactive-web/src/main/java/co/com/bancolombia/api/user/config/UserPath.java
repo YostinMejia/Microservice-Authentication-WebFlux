@@ -10,5 +10,5 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class UserPath {
     private String users;
     private String findByEmail;
-    private String existsByDocument;
+    private String existsByDocumentAndEmail;
 }

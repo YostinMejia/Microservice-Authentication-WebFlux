@@ -1,11 +1,13 @@
 package co.com.bancolombia.api;
 
+import co.com.bancolombia.api.auth.AuthHandler;
+import co.com.bancolombia.api.auth.config.AuthPath;
 import co.com.bancolombia.api.user.config.UserPath;
 import co.com.bancolombia.api.user.dto.CreateUserDto;
-import co.com.bancolombia.api.dto.ResponseUserDto;
+import co.com.bancolombia.api.dto.ResponseDto;
 import co.com.bancolombia.api.user.UserHandler;
-import co.com.bancolombia.model.exceptions.MultipleErrorsResponseDto;
-import co.com.bancolombia.model.exceptions.SingleErrorResponseDto;
+import co.com.bancolombia.model.dto.MultipleErrorsResponseDto;
+import co.com.bancolombia.model.dto.SingleErrorResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -31,7 +33,7 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 @RequiredArgsConstructor
 public class RouterRest {
     private final UserPath userPath;
-    private final UserHandler userHandler;
+    private final AuthPath authPath;
 
     @RouterOperations(
 
@@ -39,7 +41,7 @@ public class RouterRest {
                     @RouterOperation(method = POST, path = "/api/v1/usuarios",
                             operation = @Operation(operationId = "save", summary = "Save User", tags = {"Users"},
                                     responses = {
-                                            @ApiResponse(responseCode = "201", description = "Successful save", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseUserDto.class)))
+                                            @ApiResponse(responseCode = "201", description = "Successful save", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseDto.class)))
                                             , @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(mediaType = "application/json", schema = @Schema(implementation = MultipleErrorsResponseDto.class)))
                                             , @ApiResponse(responseCode = "409", description = "Email registered already", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SingleErrorResponseDto.class)))
                                             , @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SingleErrorResponseDto.class)))
@@ -54,7 +56,18 @@ public class RouterRest {
                     @RouterOperation(method = GET, path = "/api/v1/usuarios",
                             operation = @Operation(operationId = "findAll", tags = "Users", summary = "Get all Users",
                                     responses = {
-                                            @ApiResponse(responseCode = "200", description = "Successful retrieve", content = @Content(mediaType = "text/event-stream", schema = @Schema(implementation = ResponseUserDto.class)))
+                                            @ApiResponse(responseCode = "200", description = "Successful retrieve", content = @Content(mediaType = "text/event-stream", schema = @Schema(implementation = ResponseDto.class)))
+                                    }
+
+                            )),
+
+
+                    @RouterOperation(method = GET, path = "/api/v1/login",
+                            operation = @Operation(operationId = "login", tags = "Authentication", summary = "Generate Token",
+                                    responses = {
+                                            @ApiResponse(responseCode = "200", description = "Successful generation", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseDto.class)))
+                                            ,@ApiResponse(responseCode = "400", description = "Invalid credentials", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SingleErrorResponseDto.class)))
+                                            ,@ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = "application/json", schema = @Schema(implementation = MultipleErrorsResponseDto.class)))
                                     }
 
                             )),
@@ -63,9 +76,13 @@ public class RouterRest {
 
     )
     @Bean
-    public RouterFunction<ServerResponse> routerFunction(UserHandler userHandler) {
+    public RouterFunction<ServerResponse> routerFunction(UserHandler userHandler, AuthHandler authHandler) {
         return route(POST(userPath.getUsers()), userHandler::listenSave)
-                .andRoute(GET(userPath.getExistsByDocument()), userHandler::listenGetByDocument)
-                .and(route(GET(userPath.getUsers()), userHandler::listenGetAll));
+                .andRoute(POST(userPath.getExistsByDocumentAndEmail()), userHandler::listenExistsByDocumentAndEmail)
+                .and(route(GET(userPath.getUsers()), userHandler::listenGetAll))
+                /* Auth Path*/
+                .andRoute(POST(authPath.getLogin()), authHandler::listenLogin)
+                .andRoute(POST(authPath.getIsSameEmailAsToken()), authHandler::isSameEmailAsToken)
+        ;
     }
 }

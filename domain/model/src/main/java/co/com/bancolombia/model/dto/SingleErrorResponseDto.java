@@ -1,4 +1,4 @@
-package co.com.bancolombia.model.exceptions;
+package co.com.bancolombia.model.dto;
 
 public record SingleErrorResponseDto(
         String message,

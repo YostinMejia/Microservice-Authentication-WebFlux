@@ -26,6 +26,7 @@ class UserUseCaseTest {
     @Mock
     private UserRepository userRepository;
 
+
     private User user;
 
     @BeforeEach
@@ -47,7 +48,7 @@ class UserUseCaseTest {
 
         given(userRepository.findByEmail(user.getEmail())).willReturn(Mono.just(user));
 
-        StepVerifier.create(userUseCase.findUserByEmail(user.getEmail()))
+        StepVerifier.create(userUseCase.findByEmail(user.getEmail()))
                 .expectNext(user)
                 .verifyComplete();
     }
@@ -58,7 +59,7 @@ class UserUseCaseTest {
         given(userRepository.existsByEmailOrDocument(user.getEmail(), user.getDocument()))
                 .willReturn(Mono.just(true));
 
-        StepVerifier.create(userUseCase.save(user))
+        StepVerifier.create(userUseCase.save(user, "client"))
                 .expectError(BusinessException.class)
                 .verify();
     }
@@ -70,7 +71,7 @@ class UserUseCaseTest {
 
         given(userRepository.save(user)).willReturn(Mono.just(user));
 
-        StepVerifier.create(userUseCase.save(user))
+        StepVerifier.create(userUseCase.save(user, "client"))
                 .expectNext(user)
                 .verifyComplete();
     }

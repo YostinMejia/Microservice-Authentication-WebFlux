@@ -1,4 +1,4 @@
-package co.com.bancolombia.model.exceptions;
+package co.com.bancolombia.model.dto;
 
 import java.util.List;
 

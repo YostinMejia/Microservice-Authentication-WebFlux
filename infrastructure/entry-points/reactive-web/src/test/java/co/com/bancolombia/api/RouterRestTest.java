@@ -1,13 +1,13 @@
 package co.com.bancolombia.api;
 
 import co.com.bancolombia.api.user.config.UserPath;
-import co.com.bancolombia.api.dto.ResponseUserDto;
+import co.com.bancolombia.api.dto.ResponseDto;
 import co.com.bancolombia.api.helper.RequestValidator;
 import co.com.bancolombia.api.user.mapper.UserDtoMapper;
 import co.com.bancolombia.api.user.UserHandler;
 import co.com.bancolombia.model.user.User;
-import co.com.bancolombia.model.exceptions.MultipleErrorsResponseDto;
-import co.com.bancolombia.model.exceptions.SingleErrorResponseDto;
+import co.com.bancolombia.model.dto.MultipleErrorsResponseDto;
+import co.com.bancolombia.model.dto.SingleErrorResponseDto;
 import co.com.bancolombia.usecase.user.UserUseCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -114,7 +114,7 @@ public class RouterRestTest {
                 .baseSalary("2000")
                 .document("984123412")
                 .build();
-        ResponseUserDto responseBody = new ResponseUserDto("User created successfully", "201-00", user);
+        ResponseDto responseBody = new ResponseDto("User created successfully", "201-00", user);
         given(userHandler.listenSave(any())).willReturn(ServerResponse.status(201).contentType(MediaType.APPLICATION_JSON).bodyValue(responseBody));
 
         client.post()
@@ -123,7 +123,7 @@ public class RouterRestTest {
                 .exchange()
                 .expectStatus().isCreated()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON)
-                .expectBody(ResponseUserDto.class)
+                .expectBody(ResponseDto.class)
                 .isEqualTo(responseBody);
     }
 }

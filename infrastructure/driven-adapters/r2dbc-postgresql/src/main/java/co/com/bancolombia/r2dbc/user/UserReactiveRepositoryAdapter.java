@@ -15,6 +15,7 @@ public class UserReactiveRepositoryAdapter extends ReactiveAdapterOperations<
         String,
         UserReactiveRepository
         > implements UserRepository {
+
     public UserReactiveRepositoryAdapter(UserReactiveRepository repository, ObjectMapper mapper) {
         super(repository, mapper, d -> mapper.map(d, User.class));
     }
@@ -26,8 +27,8 @@ public class UserReactiveRepositoryAdapter extends ReactiveAdapterOperations<
     }
 
     @Override
-    public Mono<Boolean> existsByDocument(String document) {
-        return repository.existsByDocument(document);
+    public Mono<Boolean> existsByDocumentAndEmail(String document, String email) {
+        return repository.existsByDocumentAndEmail(document, email);
     }
 
     @Override

@@ -8,11 +8,13 @@ import org.reactivecommons.utils.ObjectMapper;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
 
+import java.util.UUID;
+
 @Repository
 public class RolReactiveRepositoryAdapter extends ReactiveAdapterOperations<
         Rol,
         RolEntity,
-        String,
+        UUID,
         RolReactiveRepository
         > implements RolRepository {
     public RolReactiveRepositoryAdapter(RolReactiveRepository repository, ObjectMapper mapper) {
@@ -23,5 +25,6 @@ public class RolReactiveRepositoryAdapter extends ReactiveAdapterOperations<
     public Mono<Rol> findByName(String name) {
         return repository.findByName(name);
     }
+
 
 }

@@ -13,13 +13,13 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@Setter
+@Setter()
 @Builder
 @Table("users")
 public class UserEntity {
     @Id
     @Column("user_id")
-    private String id;
+    private UUID id;
 
     private String name;
     private String lastName;
@@ -30,6 +30,6 @@ public class UserEntity {
     private String phone;
     private LocalDate birthDate;
     private String address;
+    private String password;
     private UUID idRol;
-
 }

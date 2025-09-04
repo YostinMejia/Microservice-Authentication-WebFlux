@@ -7,12 +7,16 @@ public record CreateUserDto(
         @NotNull
         @NotBlank
         String name,
+
         @NotNull
         @NotBlank
         String lastName,
         @NotNull
         @Email
         String email,
+        @NotNull
+        @NotBlank
+        String password,
         @NotBlank
         String rol,
         @NotNull

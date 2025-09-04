@@ -1,8 +1,9 @@
 package co.com.bancolombia.api;
 
 import co.com.bancolombia.model.exceptions.BusinessException;
-import co.com.bancolombia.model.exceptions.MultipleErrorsResponseDto;
-import co.com.bancolombia.model.exceptions.SingleErrorResponseDto;
+import co.com.bancolombia.model.dto.MultipleErrorsResponseDto;
+import co.com.bancolombia.model.dto.SingleErrorResponseDto;
+import co.com.bancolombia.model.utils.BusinessErrorCode;
 import org.springframework.boot.autoconfigure.web.WebProperties;
 import org.springframework.boot.autoconfigure.web.reactive.error.AbstractErrorWebExceptionHandler;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
@@ -64,8 +65,8 @@ public class GlobalErrorWebExceptionHandler extends AbstractErrorWebExceptionHan
                             .status((int) errorAttributes.getOrDefault("status", 500))
                             .contentType(MediaType.APPLICATION_JSON)
                             .bodyValue(new SingleErrorResponseDto(
-                                    (String) errorAttributes.getOrDefault("error", "Internal Server Error"),
-                                    "I500-00"
+                                    (String) errorAttributes.getOrDefault("error", BusinessErrorCode.INTERNAL_SERVER_ERROR.getMessage()),
+                                    BusinessErrorCode.INTERNAL_SERVER_ERROR.getBusinessCode()
                             ));
                 });
 
