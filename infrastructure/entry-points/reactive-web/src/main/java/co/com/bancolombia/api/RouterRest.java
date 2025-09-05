@@ -46,6 +46,7 @@ public class RouterRest {
                                             , @ApiResponse(responseCode = "409", description = "Email registered already", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SingleErrorResponseDto.class)))
                                             , @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SingleErrorResponseDto.class)))
                                             ,@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(mediaType = "application/json"))
+                                            ,@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(mediaType = "application/json"))
 
                                     },
                                     requestBody = @RequestBody(
@@ -60,6 +61,7 @@ public class RouterRest {
                                     responses = {
                                             @ApiResponse(responseCode = "200", description = "Successful retrieve", content = @Content(mediaType = "text/event-stream", schema = @Schema(implementation = ResponseDto.class)))
                                             ,@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(mediaType = "application/json"))
+                                            ,@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(mediaType = "application/json"))
 
                                     }
 
@@ -82,6 +84,7 @@ public class RouterRest {
                                             @ApiResponse(responseCode = "200", description = "Is not the same email as token", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseDto.class)))
                                             ,@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(mediaType = "application/json"))
                                             ,@ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = "application/json", schema = @Schema(implementation = MultipleErrorsResponseDto.class)))
+                                            ,@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(mediaType = "application/json"))
                                     }
 
                             )),
