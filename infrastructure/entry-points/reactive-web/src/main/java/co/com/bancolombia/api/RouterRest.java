@@ -45,6 +45,8 @@ public class RouterRest {
                                             , @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(mediaType = "application/json", schema = @Schema(implementation = MultipleErrorsResponseDto.class)))
                                             , @ApiResponse(responseCode = "409", description = "Email registered already", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SingleErrorResponseDto.class)))
                                             , @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SingleErrorResponseDto.class)))
+                                            ,@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(mediaType = "application/json"))
+
                                     },
                                     requestBody = @RequestBody(
                                             required = true,
@@ -57,6 +59,8 @@ public class RouterRest {
                             operation = @Operation(operationId = "findAll", tags = "Users", summary = "Get all Users",
                                     responses = {
                                             @ApiResponse(responseCode = "200", description = "Successful retrieve", content = @Content(mediaType = "text/event-stream", schema = @Schema(implementation = ResponseDto.class)))
+                                            ,@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(mediaType = "application/json"))
+
                                     }
 
                             )),
@@ -67,6 +71,16 @@ public class RouterRest {
                                     responses = {
                                             @ApiResponse(responseCode = "200", description = "Successful generation", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseDto.class)))
                                             ,@ApiResponse(responseCode = "400", description = "Invalid credentials", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SingleErrorResponseDto.class)))
+                                            ,@ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = "application/json", schema = @Schema(implementation = MultipleErrorsResponseDto.class)))
+                                    }
+
+                            )),
+
+                    @RouterOperation(method = GET, path = "/api/v1/auth/same-email",
+                            operation = @Operation(operationId = "Auth", tags = "Authentication", summary = "Verify that the users header and body sent is equals",
+                                    responses = {
+                                            @ApiResponse(responseCode = "200", description = "Is not the same email as token", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseDto.class)))
+                                            ,@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(mediaType = "application/json"))
                                             ,@ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = "application/json", schema = @Schema(implementation = MultipleErrorsResponseDto.class)))
                                     }
 
