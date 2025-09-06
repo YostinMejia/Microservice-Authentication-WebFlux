@@ -25,7 +25,7 @@ public class User {
     private String phone;
     private String email;
     private String password;
-    private String baseSalary;
+    private Long baseSalary;
     private UUID idRol;
 
     @Override
