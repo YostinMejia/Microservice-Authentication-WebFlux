@@ -22,6 +22,11 @@ public class UserUseCase {
         return userRepository.findByEmail(email);
     }
 
+    public Mono<String> findRoleNameByEmail(String email) {
+        return userRepository.findRoleNameByEmail(email)
+                .switchIfEmpty(Mono.error(new BusinessException(BusinessErrorCode.USER_NOT_FOUND)));
+    }
+
     public Mono<Boolean> existsByDocumentAndEmail(String document, String email) {
         return userRepository.existsByDocumentAndEmail(document, email);
     }
@@ -33,7 +38,7 @@ public class UserUseCase {
     public Mono<User> validateCredentials(String email, String password) {
         return this.findByEmail(email)
                 .switchIfEmpty(Mono.error(new BusinessException(BusinessErrorCode.USER_NOT_FOUND)))
-                .filter(user ->  passwordCryptoGateway.matches(user.getPassword(), password))
+                .filter(user -> passwordCryptoGateway.matches(user.getPassword(), password))
                 .switchIfEmpty(Mono.error(new BusinessException(BusinessErrorCode.INVALID_CREDENTIALS)));
     }
 

@@ -71,6 +71,7 @@ import static org.mockito.BDDMockito.given;
         "routes.paths.users.users=/api/v1/ususario",
         "routes.paths.users.findByEmail=/api/v1/usuarios/{email}",
         "routes.paths.users.existsByDocumentAndEmail=/api/v1/usuarios/exists",
+        "routes.paths.users.findRoleNameByEmail=/api/v1/usuarios/{email}/exists",
         "routes.paths.auth.login=/api/v1/login",
         "routes.paths.auth.isSameEmailAsToken=/api/v1/auth/same-email"
 })
@@ -145,6 +146,59 @@ public class RouterRestTest {
                 .document(createUserDto.document())
                 .address(createUserDto.address())
                 .build();
+    }
+
+
+    @Test
+    void listenFindRoleNameByEmail_ShouldReturnRoleName_WhenUserExists() {
+        String roleName = "CLIENT";
+
+        given(userUseCase.findRoleNameByEmail(user.getEmail())).willReturn(Mono.just(roleName));
+
+        ResponseDto<String> responseExpected = new ResponseDto<>(
+                ResponseCode.USER_ROLE_FOUND.getMessage(),
+                ResponseCode.USER_ROLE_FOUND.getBusinessCode(),
+                roleName
+        );
+
+        webTestClient.get()
+                .uri(userPath.getFindRoleNameByEmail(), user.getEmail())
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                .expectStatus().isOk()
+                .expectBody(ResponseDto.class)
+                .consumeWith(response -> {
+                    ResponseDto body = response.getResponseBody();
+                    assertThat(body).isNotNull();
+                    assertThat(body.message()).isEqualTo(responseExpected.message());
+                    assertThat(body.code()).isEqualTo(responseExpected.code());
+                    assertThat(body.data()).isEqualTo(responseExpected.data());
+                });
+    }
+
+    @Test
+    void listenFindRoleNameByEmail_ShouldReturnError_WhenUserDoesNotExist() {
+        given(userUseCase.findRoleNameByEmail(user.getEmail()))
+                .willReturn(Mono.error(new BusinessException(BusinessErrorCode.USER_NOT_FOUND)));
+
+        SingleErrorResponseDto responseExpected = new SingleErrorResponseDto(
+                BusinessErrorCode.USER_NOT_FOUND.getMessage(),
+                BusinessErrorCode.USER_NOT_FOUND.getBusinessCode()
+        );
+
+        webTestClient.get()
+                .uri(userPath.getFindRoleNameByEmail(), user.getEmail())
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isBadRequest()
+                .expectBody(SingleErrorResponseDto.class)
+                .consumeWith(response -> {
+                    SingleErrorResponseDto body = response.getResponseBody();
+                    assertThat(body.message()).isEqualTo(responseExpected.message());
+                    assertThat(body.code()).isEqualTo(responseExpected.code());
+                });
     }
 
     @Test
@@ -628,6 +682,7 @@ public class RouterRestTest {
                     assertThat(body.code()).isEqualTo(responseExpected.code());
                 });
     }
+
 
 
 }

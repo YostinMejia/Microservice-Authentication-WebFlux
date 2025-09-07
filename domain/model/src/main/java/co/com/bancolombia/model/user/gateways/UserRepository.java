@@ -14,6 +14,8 @@ public interface UserRepository {
 
     Mono<Boolean> existsByEmailOrDocument(String email, String document);
 
+    Mono<String> findRoleNameByEmail(String email);
+
     Flux<User> findAll();
 
 }

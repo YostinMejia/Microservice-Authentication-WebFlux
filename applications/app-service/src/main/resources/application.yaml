@@ -29,6 +29,7 @@ routes:
       users:  "/api/v1/usuarios"
       findByEmail: "/api/v1/usuarios/{email}"
       existsByDocumentAndEmail: "/api/v1/usuarios/exists"
+      findRoleNameByEmail: "/api/v1/usuarios/{email}/role"
     auth:
       login: "/api/v1/login"
       isSameEmailAsToken: "/api/v1/auth/same-email"

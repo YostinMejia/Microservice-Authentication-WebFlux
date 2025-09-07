@@ -10,6 +10,8 @@ import co.com.bancolombia.api.user.dto.ExistsByDocumentAndEmailDto;
 import co.com.bancolombia.model.dto.MultipleErrorsResponseDto;
 import co.com.bancolombia.model.dto.SingleErrorResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -76,7 +78,22 @@ public class RouterRest {
                     @RouterOperation(method = POST, path = "/api/v1/usuarios/exists",
                             operation = @Operation(operationId = "existsByDocumentAndEmail", tags = "Users", summary = "Exist by email and document",
                                     responses = {
-                                            @ApiResponse(responseCode = "200", description = "Successful retrieve", content = @Content(mediaType = "text/event-stream", schema = @Schema(implementation = ResponseDto.class)))
+                                            @ApiResponse(responseCode = "200", description = "Successful retrieve", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseDto.class)))
+                                            , @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(mediaType = "application/json"))
+                                            , @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(mediaType = "application/json"))
+
+                                    }
+
+                            )),
+
+                    @RouterOperation(method = POST, path = "/api/v1/usuarios/{email}/role",
+                            operation = @Operation(operationId = "findRoleNameByEmail", tags = "Users", summary = "Find user role name by email",
+                                    parameters = {
+                                            @Parameter(name = "email", in = ParameterIn.PATH, required = true, description = "Email of the user")
+                                    },
+                                    responses = {
+                                            @ApiResponse(responseCode = "200", description = "Successful retrieve", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseDto.class)))
+                                            , @ApiResponse(responseCode = "400", description = "User does not exist", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SingleErrorResponseDto.class)))
                                             , @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(mediaType = "application/json"))
                                             , @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(mediaType = "application/json"))
 
@@ -113,6 +130,7 @@ public class RouterRest {
         return route(POST(userPath.getUsers()), userHandler::listenSave)
                 .andRoute(POST(userPath.getExistsByDocumentAndEmail()), userHandler::listenExistsByDocumentAndEmail)
                 .and(route(GET(userPath.getUsers()), userHandler::listenGetAll))
+                .and(route(GET(userPath.getFindRoleNameByEmail()), userHandler::listenFindRoleNameByEmail))
                 /* Auth Path*/
                 .andRoute(POST(authPath.getLogin()), authHandler::listenLogin)
                 .andRoute(POST(authPath.getIsSameEmailAsToken()), authHandler::isSameEmailAsToken)

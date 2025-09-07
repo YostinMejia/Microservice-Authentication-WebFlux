@@ -63,6 +63,18 @@ public class UserHandler {
 
     }
 
+    public Mono<ServerResponse> listenFindRoleNameByEmail(ServerRequest serverRequest) {
+        log.info(LogMessage.FIND_ROLE_NAME_BY_EMAIL_CALLED.getMessage());
+        String email = serverRequest.pathVariable("email");
+        return userUseCase.findRoleNameByEmail(email)
+                .map(data -> ResponseMapper.mapBodyResponse(ResponseCode.USER_ROLE_FOUND, data))
+                .flatMap(response ->
+                        ServerResponse.ok()
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .bodyValue(response));
+
+    }
+
     public Mono<ServerResponse> listenGetAll(ServerRequest serverRequest) {
         log.info(LogMessage.GET_ALL_CALLED.getMessage());
         return ServerResponse.ok()
