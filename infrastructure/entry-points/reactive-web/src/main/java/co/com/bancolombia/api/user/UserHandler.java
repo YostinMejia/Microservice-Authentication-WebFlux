@@ -2,7 +2,6 @@ package co.com.bancolombia.api.user;
 
 import co.com.bancolombia.api.helper.ResponseMapper;
 import co.com.bancolombia.api.user.dto.CreateUserDto;
-import co.com.bancolombia.api.dto.ResponseDto;
 import co.com.bancolombia.api.helper.RequestValidator;
 import co.com.bancolombia.api.user.dto.ExistsByDocumentAndEmailDto;
 import co.com.bancolombia.api.user.dto.UserDataResponseDto;
@@ -14,7 +13,6 @@ import co.com.bancolombia.usecase.user.UserUseCase;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
@@ -56,18 +54,6 @@ public class UserHandler {
                 .map(data -> ResponseMapper.mapBodyResponse(data ?
                                 ResponseCode.USER_EXISTS : BusinessErrorCode.USER_NOT_FOUND
                         , data))
-                .flatMap(response ->
-                        ServerResponse.ok()
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .bodyValue(response));
-
-    }
-
-    public Mono<ServerResponse> listenFindRoleNameByEmail(ServerRequest serverRequest) {
-        log.info(LogMessage.FIND_ROLE_NAME_BY_EMAIL_CALLED.getMessage());
-        String email = serverRequest.pathVariable("email");
-        return userUseCase.findRoleNameByEmail(email)
-                .map(data -> ResponseMapper.mapBodyResponse(ResponseCode.USER_ROLE_FOUND, data))
                 .flatMap(response ->
                         ServerResponse.ok()
                                 .contentType(MediaType.APPLICATION_JSON)

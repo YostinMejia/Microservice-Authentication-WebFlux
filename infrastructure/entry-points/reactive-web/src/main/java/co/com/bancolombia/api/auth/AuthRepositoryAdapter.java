@@ -31,9 +31,6 @@ public class AuthRepositoryAdapter implements AuthRepository {
         this.tokenValidity = Duration.ofMinutes(jwtConfig.getExpirationMinutes());
     }
 
-    private String extractEmail(Claims claims) {
-        return claims.get("email", String.class);
-    }
 
     private Claims extractAllClaims(String token) {
         return Jwts.parser()
@@ -67,14 +64,15 @@ public class AuthRepositoryAdapter implements AuthRepository {
     }
 
     @Override
-    public Mono<Boolean> isSameEmailAsToken(String email) {
-
+    public Mono<String> getTokenEmail() {
         return ReactiveSecurityContextHolder.getContext()
                 .map(SecurityContext::getAuthentication)
                 .map(authentication -> {
                     AuthorizedUser authorizedUser = (AuthorizedUser) authentication.getPrincipal();
-                    return authorizedUser.email().equals(email);
+                    return authorizedUser.email();
                 });
     }
 
 }
+
+

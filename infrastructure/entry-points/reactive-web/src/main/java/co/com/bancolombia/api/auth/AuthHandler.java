@@ -49,4 +49,15 @@ public class AuthHandler {
 
     }
 
+    public Mono<ServerResponse> listenFindRoleByAuthHeaderToken(ServerRequest serverRequest) {
+        log.info(LogMessage.FIND_ROLE_NAME_BY_AUTH_HEADER_CALLED.getMessage());
+        return authUseCase.getRolByAuthHeader()
+                .map(rol -> ResponseMapper.mapBodyResponse(ResponseCode.USER_ROLE_FOUND, rol))
+                .flatMap(response ->
+                        ServerResponse.ok()
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .bodyValue(response));
+
+    }
+
 }

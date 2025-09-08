@@ -34,7 +34,7 @@ public class SecurityConfig {
                         exchanges
                                 .pathMatchers(HttpMethod.POST, userPath.getUsers()).hasAnyRole(Roles.ADVISER.getValue(), Roles.ADMIN.getValue())
                                 .pathMatchers(userPath.getExistsByDocumentAndEmail()).hasRole(Roles.CLIENT.getValue())
-                                .pathMatchers(userPath.getFindRoleNameByEmail()).hasRole(Roles.ADVISER.getValue())
+                                .pathMatchers(authPath.getRoleByAuthHeaderToken()).hasRole(Roles.ADVISER.getValue())
                                 .pathMatchers(authPath.getIsSameEmailAsToken()).hasAnyRole(Roles.CLIENT.getValue(), Roles.ADMIN.getValue(), Roles.ADVISER.getValue())
                                 .pathMatchers(authPath.getLogin()).permitAll()
                                 .anyExchange().permitAll()

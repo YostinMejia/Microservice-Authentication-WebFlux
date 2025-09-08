@@ -1,6 +1,5 @@
 package co.com.bancolombia.model.utils;
 
-import co.com.bancolombia.model.rol.Rol;
 import lombok.Getter;
 
 @Getter

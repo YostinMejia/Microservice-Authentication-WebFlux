@@ -130,10 +130,9 @@ public class RouterRest {
         return route(POST(userPath.getUsers()), userHandler::listenSave)
                 .andRoute(POST(userPath.getExistsByDocumentAndEmail()), userHandler::listenExistsByDocumentAndEmail)
                 .and(route(GET(userPath.getUsers()), userHandler::listenGetAll))
-                .and(route(GET(userPath.getFindRoleNameByEmail()), userHandler::listenFindRoleNameByEmail))
-                /* Auth Path*/
                 .andRoute(POST(authPath.getLogin()), authHandler::listenLogin)
                 .andRoute(POST(authPath.getIsSameEmailAsToken()), authHandler::isSameEmailAsToken)
+                .and(route(GET(authPath.getRoleByAuthHeaderToken()), authHandler::listenFindRoleByAuthHeaderToken))
                 ;
     }
 }
