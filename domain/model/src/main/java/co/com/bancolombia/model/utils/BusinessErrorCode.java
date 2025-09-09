@@ -10,7 +10,8 @@ public enum BusinessErrorCode implements ResponseMessage{
     ROL_NOT_EXIST("B400-02", "Rol does not exist"),
     INTERNAL_SERVER_ERROR("I500-00", "Internal Server Error"),
     INVALID_CREDENTIALS("B401-00", "Invalid credentials"),
-    IS_NOT_SAME_EMAIL("B400-10", "Is not the same email as token");
+    IS_NOT_SAME_EMAIL("B400-10", "Is not the same email as token"),
+    JWT_INVALID("B401-02","JWT invalid" );
 
     private final String businessCode;
     private final String message;

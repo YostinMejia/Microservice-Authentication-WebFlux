@@ -3,6 +3,8 @@ package co.com.bancolombia.api.auth;
 import co.com.bancolombia.api.auth.config.JWTConfig;
 import co.com.bancolombia.model.auth.AuthorizedUser;
 import co.com.bancolombia.model.auth.gateways.AuthRepository;
+import co.com.bancolombia.model.exceptions.BusinessException;
+import co.com.bancolombia.model.utils.BusinessErrorCode;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -53,14 +55,13 @@ public class AuthRepositoryAdapter implements AuthRepository {
 
     @Override
     public Mono<AuthorizedUser> isValidToken(String token) {
-        final Claims claims = extractAllClaims(token);
-        return Mono.just(claims)
-                .flatMap(claimsVerified -> Mono.just(
-                        new AuthorizedUser(
-                                claimsVerified.getSubject(),
-                                (String) claimsVerified.get(TokenClaims.EMAIL.getValue()),
-                                (String) claimsVerified.get(TokenClaims.ROL.getValue()))
-                ));
+        return Mono.fromCallable(() -> extractAllClaims(token))
+                .map(claimsVerified -> new AuthorizedUser(
+                        claimsVerified.getSubject(),
+                        (String) claimsVerified.get(TokenClaims.EMAIL.getValue()),
+                        (String) claimsVerified.get(TokenClaims.ROL.getValue()))
+                )
+                .onErrorMap(e -> new BusinessException(BusinessErrorCode.JWT_INVALID));
     }
 
     @Override

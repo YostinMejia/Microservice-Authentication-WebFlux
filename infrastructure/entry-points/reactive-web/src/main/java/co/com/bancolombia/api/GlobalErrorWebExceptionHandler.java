@@ -44,7 +44,7 @@ public class GlobalErrorWebExceptionHandler extends AbstractErrorWebExceptionHan
                 .doOnNext(er -> log.error(er.getMessage()))
                 .flatMap(error -> {
                     if (error instanceof BusinessException bex) {
-                        return ServerResponse.badRequest()
+                        return ServerResponse.status(Integer.parseInt(bex.getCode().substring(1,4)))
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .bodyValue(
                                         bex.getErrors() != null ?
