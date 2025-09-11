@@ -101,6 +101,7 @@ tasks.register('jacocoMergedReport', JacocoReport) {
                 exclude '**/*Mapper*.class'
                 exclude '**/MainApplication.class'
                 exclude '**/RequestValidator.class'
+                exclude '**/ApplicationDtoMapperImpl.class'
                 exclude '**/PostgresqlConnectionProperties.class'
             }
     )

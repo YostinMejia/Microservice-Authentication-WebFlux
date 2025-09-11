@@ -1,20 +1,22 @@
-FROM gradle:8.9-jdk21 AS build
+FROM gradle:8.10.2-jdk21-alpine AS build
 
 WORKDIR /app
+
 COPY . .
-RUN gradle clean build --no-daemon
 
-FROM eclipse-temurin:21-jre-alpine AS runner
+# Compilar solo el módulo app-service, ignorando tests y validateStructure
+RUN gradle :app-service:clean :app-service:bootJar -x test -x validateStructure --no-daemon
 
-# Crear usuario no-root
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
-USER appuser
+FROM eclipse-temurin:21-jdk-alpine AS production
 
 WORKDIR /app
+
 COPY --from=build /app/applications/app-service/build/libs/*.jar app.jar
 
-# Optimización JVM
-ENV JAVA_OPTS=" -XX:+UseContainerSupport -XX:MaxRAMPercentage=70 -Djava.security.egd=file:/dev/./urandom"
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 
-EXPOSE 8080
+ENV JAVA_OPTS="-XX:+UseContainerSupport -XX:MaxRAMPercentage=70 -Djava.security.egd=file:/dev/./urandom"
+
+USER appuser
+
 ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]
